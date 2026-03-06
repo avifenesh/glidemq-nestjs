@@ -1,0 +1,69 @@
+{
+  "name": "@glidemq/nestjs",
+  "version": "0.1.0",
+  "description": "NestJS module for glide-mq - decorators, dependency injection, and lifecycle management for queues and workers",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm test && npm run build"
+  },
+  "keywords": [
+    "nestjs",
+    "module",
+    "message-queue",
+    "glide-mq",
+    "valkey",
+    "redis",
+    "job-queue",
+    "worker",
+    "decorator"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "author": "Avi Fenesh",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avifenesh/glidemq-nestjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/avifenesh/glidemq-nestjs/issues"
+  },
+  "homepage": "https://github.com/avifenesh/glidemq-nestjs#readme",
+  "sideEffects": false,
+  "peerDependencies": {
+    "@nestjs/common": ">=10.0.0",
+    "@nestjs/core": ">=10.0.0",
+    "glide-mq": ">=0.8.0",
+    "reflect-metadata": ">=0.1.0",
+    "rxjs": ">=7.0.0"
+  },
+  "devDependencies": {
+    "@nestjs/common": "^10.4.0",
+    "@nestjs/core": "^10.4.0",
+    "@nestjs/platform-express": "^10.4.22",
+    "@nestjs/testing": "^10.4.0",
+    "@types/supertest": "^7.2.0",
+    "glide-mq": "^0.8.0",
+    "reflect-metadata": "^0.2.0",
+    "rxjs": "^7.8.0",
+    "supertest": "^7.2.2",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}
