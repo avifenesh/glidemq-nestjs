@@ -132,6 +132,16 @@ export class GlideMQModule implements OnApplicationShutdown {
             });
           }
 
+          if (opts.defaultJobOptions) {
+            const defaults = opts.defaultJobOptions;
+            const origAdd = queue.add.bind(queue);
+            const origAddBulk = queue.addBulk.bind(queue);
+            queue.add = (name: string, data: any, jobOpts?: any) =>
+              origAdd(name, data, { ...defaults, ...jobOpts });
+            queue.addBulk = (jobs: any[]) =>
+              origAddBulk(jobs.map((j: any) => ({ ...j, opts: { ...defaults, ...j.opts } })));
+          }
+
           closables.push(queue);
           return queue;
         },

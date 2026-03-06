@@ -1,6 +1,6 @@
 {
   "name": "@glidemq/nestjs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "NestJS module for glide-mq - decorators, dependency injection, and lifecycle management for queues and workers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
