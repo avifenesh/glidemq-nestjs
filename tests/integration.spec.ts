@@ -298,6 +298,88 @@ describe('Integration: forRootAsync with factory', () => {
   });
 });
 
+describe('Integration: defaultJobOptions', () => {
+  let app: INestApplication;
+
+  afterEach(async () => {
+    if (app) {
+      await app.close();
+    }
+  });
+
+  it('should merge defaultJobOptions into queue.add calls', async () => {
+    @Processor('defaults-queue')
+    class DefaultsProcessor extends WorkerHost {
+      public jobs: any[] = [];
+      async process(job: Job) {
+        this.jobs.push({ data: job.data, opts: job.opts });
+        return { ok: true };
+      }
+    }
+
+    @Module({
+      imports: [
+        GlideMQModule.forRoot({ testing: true }),
+        GlideMQModule.registerQueue({
+          name: 'defaults-queue',
+          defaultJobOptions: { attempts: 5, priority: 2 },
+        }),
+      ],
+      providers: [DefaultsProcessor],
+    })
+    class DefaultsModule {}
+
+    const moduleRef = await Test.createTestingModule({
+      imports: [DefaultsModule],
+    }).compile();
+
+    app = moduleRef.createNestApplication();
+    await app.init();
+
+    const queue = moduleRef.get(getQueueToken('defaults-queue'));
+
+    // Add job without opts - should get defaults
+    const job1 = await queue.add('task-1', { x: 1 });
+    expect(job1.opts.attempts).toBe(5);
+    expect(job1.opts.priority).toBe(2);
+
+    // Add job with opts - should override defaults
+    const job2 = await queue.add('task-2', { x: 2 }, { attempts: 10 });
+    expect(job2.opts.attempts).toBe(10);
+    expect(job2.opts.priority).toBe(2);
+  });
+
+  it('should merge defaultJobOptions into queue.addBulk calls', async () => {
+    @Module({
+      imports: [
+        GlideMQModule.forRoot({ testing: true }),
+        GlideMQModule.registerQueue({
+          name: 'bulk-defaults-queue',
+          defaultJobOptions: { attempts: 3 },
+        }),
+      ],
+    })
+    class BulkDefaultsModule {}
+
+    const moduleRef = await Test.createTestingModule({
+      imports: [BulkDefaultsModule],
+    }).compile();
+
+    app = moduleRef.createNestApplication();
+    await app.init();
+
+    const queue = moduleRef.get(getQueueToken('bulk-defaults-queue'));
+    const jobs = await queue.addBulk([
+      { name: 'a', data: { v: 1 } },
+      { name: 'b', data: { v: 2 }, opts: { priority: 5 } },
+    ]);
+
+    expect(jobs[0].opts.attempts).toBe(3);
+    expect(jobs[1].opts.attempts).toBe(3);
+    expect(jobs[1].opts.priority).toBe(5);
+  });
+});
+
 describe('Integration: FlowProducer', () => {
   let app: INestApplication;
 
