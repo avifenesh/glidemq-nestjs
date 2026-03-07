@@ -73,6 +73,8 @@ export class EmailService {
 | `GlideMQModule.forRootAsync(options)` | Async config (e.g., from ConfigService) |
 | `GlideMQModule.registerQueue({ name })` | Register a queue for injection |
 | `GlideMQModule.registerFlowProducer({ name })` | Register a FlowProducer for injection |
+| `GlideMQModule.registerBroadcast({ name })` | Register a Broadcast for injection |
+| `GlideMQModule.registerProducer({ name })` | Register a lightweight Producer for injection |
 
 ### Decorators
 
@@ -80,7 +82,10 @@ export class EmailService {
 |-----------|--------|-------------|
 | `@InjectQueue(name)` | Parameter | Inject a Queue instance |
 | `@InjectFlowProducer(name)` | Parameter | Inject a FlowProducer instance |
+| `@InjectBroadcast(name)` | Parameter | Inject a Broadcast instance |
+| `@InjectProducer(name)` | Parameter | Inject a Producer instance |
 | `@Processor(name)` | Class | Mark a class as a queue processor |
+| `@BroadcastProcessor(options)` | Class | Mark a class as a broadcast processor |
 | `@OnWorkerEvent(event)` | Method | Listen to worker events (completed, failed, etc.) |
 | `@QueueEventsListener(name)` | Class | Mark a class as a QueueEvents listener |
 | `@OnQueueEvent(event)` | Method | Listen to queue events |
@@ -108,6 +113,97 @@ import type { FlowProducer } from 'glide-mq';
 @Injectable()
 export class PipelineService {
   constructor(@InjectFlowProducer('workflows') private readonly flow: FlowProducer) {}
+}
+```
+
+### Producer (lightweight serverless producer)
+
+`Producer` is a lightweight alternative to `Queue` for serverless/edge environments - no EventEmitter overhead, returns string IDs, and supports `add()` and `addBulk()`.
+
+```typescript
+import { Module } from '@nestjs/common';
+import { GlideMQModule } from '@glidemq/nestjs';
+
+@Module({
+  imports: [
+    GlideMQModule.forRoot({
+      connection: { addresses: [{ host: 'localhost', port: 6379 }] },
+    }),
+    GlideMQModule.registerProducer({ name: 'notifications' }),
+  ],
+  providers: [NotificationService],
+})
+export class AppModule {}
+```
+
+Inject and use:
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { InjectProducer } from '@glidemq/nestjs';
+import type { Producer } from 'glide-mq';
+
+@Injectable()
+export class NotificationService {
+  constructor(@InjectProducer('notifications') private readonly producer: Producer) {}
+
+  async notify(userId: string, message: string): Promise<string> {
+    return this.producer.add('push', { userId, message });
+  }
+}
+```
+
+### Broadcast
+
+Register a broadcast channel and publish messages with subject-based filtering:
+
+```typescript
+import { Module } from '@nestjs/common';
+import { GlideMQModule } from '@glidemq/nestjs';
+
+@Module({
+  imports: [
+    GlideMQModule.forRoot({
+      connection: { addresses: [{ host: 'localhost', port: 6379 }] },
+    }),
+    GlideMQModule.registerBroadcast({ name: 'events' }),
+  ],
+  providers: [EventPublisher, OrderEventsProcessor],
+})
+export class AppModule {}
+```
+
+Publish with a subject:
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { InjectBroadcast } from '@glidemq/nestjs';
+import type { Broadcast } from 'glide-mq';
+
+@Injectable()
+export class EventPublisher {
+  constructor(@InjectBroadcast('events') private readonly broadcast: Broadcast) {}
+
+  async publishOrderCreated(order: any) {
+    await this.broadcast.publish('orders.created', { orderId: order.id });
+  }
+}
+```
+
+Process broadcast messages with subject filtering using the `subjects` option on `@BroadcastProcessor`:
+
+```typescript
+import { BroadcastProcessor, WorkerHost } from '@glidemq/nestjs';
+
+@BroadcastProcessor({
+  name: 'events',
+  subscription: 'order-handler',
+  subjects: ['orders.*'],
+})
+export class OrderEventsProcessor extends WorkerHost {
+  async process(job: any) {
+    console.log('Order event:', job.data);
+  }
 }
 ```
 

@@ -18,8 +18,12 @@ import type {
   GlideMQOptionsFactory,
   RegisterQueueOptions,
   RegisterFlowProducerOptions,
+  RegisterBroadcastOptions,
+  RegisterProducerOptions,
 } from './glidemq.interfaces';
 import { GlideMQExplorer } from './glidemq.explorer';
+import { createBroadcastProviders } from './providers/create-broadcast.provider';
+import { createProducerProviders } from './providers/create-producer.provider';
 
 export const GLIDEMQ_CLOSABLES = 'GLIDEMQ_CLOSABLES';
 
@@ -196,6 +200,26 @@ export class GlideMQModule implements OnApplicationShutdown {
 
       exports.push(token);
     }
+
+    return {
+      module: GlideMQModule,
+      providers,
+      exports,
+    };
+  }
+
+  static registerBroadcast(...options: RegisterBroadcastOptions[]): DynamicModule {
+    const { providers, exports } = createBroadcastProviders(options);
+
+    return {
+      module: GlideMQModule,
+      providers,
+      exports,
+    };
+  }
+
+  static registerProducer(...options: RegisterProducerOptions[]): DynamicModule {
+    const { providers, exports } = createProducerProviders(options);
 
     return {
       module: GlideMQModule,
