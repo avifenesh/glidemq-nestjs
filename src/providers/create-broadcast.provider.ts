@@ -1,19 +1,14 @@
 import type { Provider } from '@nestjs/common';
-import {
-  GLIDEMQ_MODULE_OPTIONS,
-  getBroadcastToken,
-} from '../glidemq.constants';
+import { GLIDEMQ_MODULE_OPTIONS, GLIDEMQ_CLOSABLES, getBroadcastToken } from '../glidemq.constants';
 import type { GlideMQModuleOptions, RegisterBroadcastOptions } from '../glidemq.interfaces';
-import { GLIDEMQ_CLOSABLES } from '../glidemq.module';
 
 interface Closable {
   close(): Promise<void>;
 }
 
-export function createBroadcastProviders(options: RegisterBroadcastOptions[]): {
-  providers: Provider[];
-  exports: string[];
-} {
+export function createBroadcastProviders(
+  options: RegisterBroadcastOptions[],
+): { providers: Provider[]; exports: string[] } {
   const providers: Provider[] = [];
   const exports: string[] = [];
 

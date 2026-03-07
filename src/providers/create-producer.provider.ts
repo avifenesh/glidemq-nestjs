@@ -1,10 +1,6 @@
 import type { Provider } from '@nestjs/common';
-import {
-  GLIDEMQ_MODULE_OPTIONS,
-  getProducerToken,
-} from '../glidemq.constants';
+import { GLIDEMQ_MODULE_OPTIONS, GLIDEMQ_CLOSABLES, getProducerToken } from '../glidemq.constants';
 import type { GlideMQModuleOptions, RegisterProducerOptions } from '../glidemq.interfaces';
-import { GLIDEMQ_CLOSABLES } from '../glidemq.module';
 
 interface Closable {
   close(): Promise<void>;

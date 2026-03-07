@@ -66,6 +66,7 @@ export interface ProcessorOptions {
   workerOpts?: Partial<Omit<WorkerOptions, 'connection' | 'client' | 'commandClient'>>;
 }
 
+
 export interface BroadcastProcessorOptions {
   name: string;
   subscription: string;

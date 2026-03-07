@@ -198,6 +198,7 @@ export class GlideMQExplorer implements OnModuleInit {
     );
   }
 
+
   private exploreQueueEventsListeners(): void {
     if (this.options.testing) return;
 
