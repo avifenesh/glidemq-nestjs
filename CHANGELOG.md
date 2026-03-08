@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3
+
+- Republish with glide-mq 0.9.0 lockfile
+
 ## 0.1.2
 
 - Require glide-mq >=0.9.0
