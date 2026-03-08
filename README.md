@@ -23,6 +23,8 @@ A BullMQ-style integration for NestJS built on glide-mq. Register queues and pro
 npm install @glidemq/nestjs glide-mq @nestjs/common @nestjs/core
 ```
 
+Requires **glide-mq 0.9+** and **NestJS 10+**.
+
 ## Quick start
 
 ```typescript

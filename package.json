@@ -49,7 +49,7 @@
   "peerDependencies": {
     "@nestjs/common": ">=10.0.0",
     "@nestjs/core": ">=10.0.0",
-    "glide-mq": ">=0.8.0",
+    "glide-mq": ">=0.9.0",
     "reflect-metadata": ">=0.1.0",
     "rxjs": ">=7.0.0"
   },
@@ -59,7 +59,7 @@
     "@nestjs/platform-express": "^10.4.22",
     "@nestjs/testing": "^10.4.0",
     "@types/supertest": "^7.2.0",
-    "glide-mq": "^0.8.0",
+    "glide-mq": "latest",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.0",
     "supertest": "^7.2.2",
