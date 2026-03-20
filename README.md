@@ -2,6 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/@glidemq/nestjs)](https://www.npmjs.com/package/@glidemq/nestjs)
 [![license](https://img.shields.io/npm/l/@glidemq/nestjs)](https://github.com/avifenesh/glidemq-nestjs/blob/main/LICENSE)
+[![docs](https://img.shields.io/badge/docs-glide--mq.dev-6366f1)](https://avifenesh.github.io/glide-mq.dev/)
 
 NestJS module for [glide-mq](https://github.com/avifenesh/glide-mq) -- decorators, dependency injection, and lifecycle management for queues, workers, and broadcast.
 
@@ -9,6 +10,7 @@ Register queues and processors with decorators, inject them through the standard
 
 > If glide-mq is useful to you, consider [giving it a star](https://github.com/avifenesh/glide-mq). It helps others discover the project.
 
+**[Full documentation](https://avifenesh.github.io/glide-mq.dev/integrations/nestjs)** | **[Core docs](https://avifenesh.github.io/glide-mq.dev/guide/getting-started)**
 ## Why @glidemq/nestjs
 
 - Use this when you want **decorator-based processors** (`@Processor`, `@BroadcastProcessor`) that auto-wire to workers on startup.
