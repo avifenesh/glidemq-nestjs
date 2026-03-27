@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/@glidemq/nestjs)](https://www.npmjs.com/package/@glidemq/nestjs)
 [![license](https://img.shields.io/npm/l/@glidemq/nestjs)](https://github.com/avifenesh/glidemq-nestjs/blob/main/LICENSE)
 
-NestJS module for [glide-mq](https://github.com/avifenesh/glide-mq) - decorators, dependency injection, and automatic lifecycle management for queues, workers, and broadcast.
+NestJS module for [glide-mq](https://github.com/avifenesh/glide-mq) - type-safe decorators and DI for high-performance queues with AI orchestration.
 
 ## Why
 
@@ -17,7 +17,7 @@ NestJS module for [glide-mq](https://github.com/avifenesh/glide-mq) - decorators
 npm install @glidemq/nestjs glide-mq @nestjs/common @nestjs/core
 ```
 
-Requires **glide-mq >= 0.13.0** and **NestJS 10+**.
+Requires **glide-mq >= 0.14.0** and **NestJS 10+**.
 
 ## Quick start
 
@@ -71,7 +71,87 @@ export class EmailService {
 
 ## AI-native features
 
-glide-mq 0.13+ provides AI orchestration primitives - token/cost tracking, real-time streaming, human-in-the-loop suspend/signal, model failover chains, budget caps, dual-axis rate limiting, and vector search. All are accessible through injected queues and workers in your NestJS services. See the [glide-mq docs](https://github.com/avifenesh/glide-mq) for details.
+glide-mq 0.14+ provides AI orchestration primitives - token/cost tracking, real-time streaming, human-in-the-loop suspend/signal, model failover chains, budget caps, dual-axis rate limiting, and vector search. All are accessible through the injected Queue, Worker, and FlowProducer instances in your NestJS services.
+
+### Usage tracking and streaming
+
+```typescript
+// llm.processor.ts
+import { Processor, WorkerHost } from "@glidemq/nestjs";
+import type { Job } from "glide-mq";
+
+@Processor("llm-tasks")
+export class LlmProcessor extends WorkerHost {
+  async process(job: Job) {
+    const response = await callLlm(job.data.prompt);
+
+    // Stream reasoning and content chunks back in real time
+    for (const chunk of response.reasoningChunks) {
+      await job.streamChunk("reasoning", chunk);
+    }
+    for (const chunk of response.contentChunks) {
+      await job.streamChunk("content", chunk);
+    }
+    await job.streamChunk("done");
+
+    // Report token usage and cost
+    await job.reportUsage({
+      model: "claude-sonnet-4-20250514",
+      provider: "anthropic",
+      tokens: {
+        input: response.inputTokens,
+        output: response.outputTokens,
+        reasoning: response.reasoningTokens,
+      },
+      costs: { total: response.cost },
+      costUnit: "usd",
+    });
+
+    return { result: response.text };
+  }
+}
+```
+
+### Flow-level budgets
+
+```typescript
+// orchestration.service.ts
+import { Injectable } from "@nestjs/common";
+import { InjectFlowProducer } from "@glidemq/nestjs";
+import type { FlowProducer } from "glide-mq";
+
+@Injectable()
+export class OrchestrationService {
+  constructor(
+    @InjectFlowProducer("llm-flow") private readonly flow: FlowProducer,
+  ) {}
+
+  async runChain(prompt: string) {
+    await this.flow.add(
+      {
+        name: "summarize",
+        queueName: "llm-tasks",
+        data: { prompt },
+        children: [
+          { name: "research", queueName: "llm-tasks", data: { prompt } },
+          { name: "draft", queueName: "llm-tasks", data: { prompt } },
+        ],
+      },
+      {
+        budget: {
+          maxTotalTokens: 10000,
+          tokenWeights: { reasoning: 4, cachedInput: 0.25 },
+          maxTotalCost: 0.5,
+          costUnit: "usd",
+          onExceeded: "fail",
+        },
+      },
+    );
+  }
+}
+```
+
+The budget is enforced across all jobs in the flow. When the weighted token total or cost cap is hit, remaining jobs fail (or pause, depending on `onExceeded`). See the [glide-mq docs](https://github.com/avifenesh/glide-mq) for the full API.
 
 ## Configuration
 
