@@ -25,7 +25,7 @@ Register queues and processors with decorators, inject them through the standard
 npm install @glidemq/nestjs glide-mq @nestjs/common @nestjs/core
 ```
 
-Requires **glide-mq 0.9+** and **NestJS 10+**.
+Requires **glide-mq 0.13+** and **NestJS 10+**.
 
 ## Quick start
 
@@ -188,6 +188,18 @@ const service = moduleRef.get(EmailService);
 await service.send('test@example.com', 'Hello');
 ```
 
+## AI-native features (glide-mq 0.13+)
+
+glide-mq 0.13 introduces AI-native orchestration primitives. All of these are accessible through the NestJS module via injected queues and workers:
+
+- **Token/cost tracking** -- call `reportUsage()` in processors and query `getFlowUsage()` on parent jobs for per-flow token and cost accounting
+- **Real-time streaming** -- use `job.stream()` in processors and `readStream()` or SSE in controllers to stream LLM output to clients
+- **Human-in-the-loop** -- `suspend()` and `signal()` for pausing jobs pending human approval
+- **Model failover** -- fallback chains for ordered model/provider alternatives on failure
+- **Budget caps** -- flow-level token and cost limits via budget middleware
+- **Rate limiting** -- dual-axis RPM + TPM rate limiting for LLM API compliance
+- **Vector search** -- `createJobIndex()` and `vectorSearch()` for semantic search over jobs
+
 ## Limitations
 
 - Requires NestJS 10+ and Node.js 20+.
@@ -205,7 +217,7 @@ For advanced DI scenarios (custom providers, testing overrides), use the token f
 
 | Package | Description |
 |---------|-------------|
-| [glide-mq](https://github.com/avifenesh/glide-mq) | Core queue library -- producers, workers, schedulers, workflows |
+| [glide-mq](https://github.com/avifenesh/glide-mq) | AI-native queue library -- orchestration, streaming, failover, budget caps |
 | [@glidemq/hono](https://github.com/avifenesh/glidemq-hono) | Hono middleware -- REST API + SSE events |
 | [@glidemq/fastify](https://github.com/avifenesh/glidemq-fastify) | Fastify plugin -- REST API + SSE events |
 | [@glidemq/hapi](https://github.com/avifenesh/glidemq-hapi) | Hapi plugin -- REST API + SSE events |
