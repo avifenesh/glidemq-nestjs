@@ -44,7 +44,7 @@
   "bugs": {
     "url": "https://github.com/avifenesh/glidemq-nestjs/issues"
   },
-  "homepage": "https://avifenesh.github.io/glide-mq.dev/integrations/nestjs",
+  "homepage": "https://avifenesh.github.io/glidemq.dev/integrations/nestjs",
   "sideEffects": false,
   "peerDependencies": {
     "@nestjs/common": ">=10.0.0",

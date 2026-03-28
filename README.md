@@ -191,7 +191,7 @@ await service.send("test@example.com", "Hello");
 ## Links
 
 - [glide-mq](https://github.com/avifenesh/glide-mq) - core library
-- [Full documentation](https://avifenesh.github.io/glide-mq.dev/integrations/nestjs)
+- [Full documentation](https://avifenesh.github.io/glidemq.dev/integrations/nestjs)
 - [Issues](https://github.com/avifenesh/glidemq-nestjs/issues)
 - [@glidemq/hono](https://github.com/avifenesh/glidemq-hono) | [@glidemq/fastify](https://github.com/avifenesh/glidemq-fastify) | [@glidemq/hapi](https://github.com/avifenesh/glidemq-hapi) | [@glidemq/dashboard](https://github.com/avifenesh/glidemq-dashboard)
 
