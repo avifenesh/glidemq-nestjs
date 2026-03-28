@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0
+
+- Add AI-native examples to README (usage tracking, streaming, flow budgets)
+- Require glide-mq >=0.14.0
+
 ## 0.1.3
 
 - Republish with glide-mq 0.9.0 lockfile
