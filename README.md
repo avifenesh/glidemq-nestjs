@@ -73,6 +73,8 @@ export class EmailService {
 
 glide-mq 0.14+ provides AI orchestration primitives - token/cost tracking, real-time streaming, human-in-the-loop suspend/signal, model failover chains, budget caps, dual-axis rate limiting, vector search, and rolling usage summaries. All are accessible through the injected Queue, Worker, FlowProducer, Broadcast, and QueueEvents instances in your NestJS services.
 
+If you need cross-language or non-Nest clients to create and inspect flows over HTTP (`POST /flows`, `GET /flows/:id`, `GET /flows/:id/tree`, `DELETE /flows/:id`), use the core glide-mq proxy or the Hono/Fastify/Hapi wrappers. `@glidemq/nestjs` is a DI/module integration, not an HTTP API layer.
+
 ### Usage tracking and streaming
 
 ```typescript
