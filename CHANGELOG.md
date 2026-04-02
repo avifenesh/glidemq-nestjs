@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1
+
+- Refresh the README and integration guidance to match glide-mq 0.15.0 terminology and ecosystem links.
+- Clarify that flow creation and write-side HTTP APIs live in the proxy and framework wrappers, while the NestJS module focuses on in-process queues, workers, and decorators.
+
 ## 0.2.0
 
 - Add AI-native examples to README (usage tracking, streaming, flow budgets)
