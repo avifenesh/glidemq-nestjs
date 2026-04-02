@@ -71,7 +71,7 @@ export class EmailService {
 
 ## AI-native features
 
-glide-mq 0.14+ provides AI orchestration primitives - token/cost tracking, real-time streaming, human-in-the-loop suspend/signal, model failover chains, budget caps, dual-axis rate limiting, and vector search. All are accessible through the injected Queue, Worker, and FlowProducer instances in your NestJS services.
+glide-mq 0.14+ provides AI orchestration primitives - token/cost tracking, real-time streaming, human-in-the-loop suspend/signal, model failover chains, budget caps, dual-axis rate limiting, vector search, and rolling usage summaries. All are accessible through the injected Queue, Worker, FlowProducer, Broadcast, and QueueEvents instances in your NestJS services.
 
 ### Usage tracking and streaming
 
@@ -153,6 +153,25 @@ export class OrchestrationService {
 
 The budget is enforced across all jobs in the flow. When the weighted token total or cost cap is hit, remaining jobs fail (or pause, depending on `onExceeded`). See the [glide-mq docs](https://github.com/avifenesh/glide-mq) for the full API.
 
+### Queue-wide usage summaries
+
+```typescript
+import { Injectable } from "@nestjs/common";
+import { InjectQueue } from "@glidemq/nestjs";
+import type { Queue } from "glide-mq";
+
+@Injectable()
+export class UsageService {
+  constructor(@InjectQueue("llm-tasks") private readonly queue: Queue) {}
+
+  async summary() {
+    return this.queue.getUsageSummary({ windowMs: 60_000 });
+  }
+}
+```
+
+Use the instance method for queue-local summaries, or `Queue.getUsageSummary(...)` when you want to aggregate across multiple queues.
+
 ## Configuration
 
 | Method | Description |
@@ -191,7 +210,7 @@ await service.send("test@example.com", "Hello");
 ## Links
 
 - [glide-mq](https://github.com/avifenesh/glide-mq) - core library
-- [Full documentation](https://avifenesh.github.io/glidemq.dev/integrations/nestjs)
+- [Full documentation](https://glidemq.dev/integrations/nestjs)
 - [Issues](https://github.com/avifenesh/glidemq-nestjs/issues)
 - [@glidemq/hono](https://github.com/avifenesh/glidemq-hono) | [@glidemq/fastify](https://github.com/avifenesh/glidemq-fastify) | [@glidemq/hapi](https://github.com/avifenesh/glidemq-hapi) | [@glidemq/dashboard](https://github.com/avifenesh/glidemq-dashboard)
 
