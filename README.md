@@ -17,7 +17,7 @@ NestJS module for [glide-mq](https://github.com/avifenesh/glide-mq) - type-safe 
 npm install @glidemq/nestjs glide-mq @nestjs/common @nestjs/core
 ```
 
-Requires **glide-mq >= 0.14.0** and **NestJS 10+**.
+Requires **glide-mq >= 0.15.2** and **NestJS 10+**.
 
 ## Quick start
 
