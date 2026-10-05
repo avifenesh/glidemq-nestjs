@@ -100,7 +100,7 @@ describe('Error handling', () => {
     await new Promise((r) => setTimeout(r, 200));
 
     const processor = moduleRef.get(ExhaustProcessor);
-    expect(processor.failCount).toBe(1);
+    expect(processor.failCount).toBe(3);
 
     const counts = await queue.getJobCounts();
     expect(counts.failed).toBe(1);

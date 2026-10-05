@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.3
+
+- Validate against glide-mq 0.17.0 and replace the floating development dependency with an explicit compatible range.
+- Align the development NestJS packages on version 11 so installation resolves one framework version.
+- Configure legacy decorator metadata for the current Vitest transformer.
+- Check in the dependency lock and run the existing test/build job on pull requests.
+- Include the merged dependency security updates.
+
 ## 0.2.1
 
 - Refresh the README and integration guidance to match glide-mq 0.15.0 terminology and ecosystem links.
