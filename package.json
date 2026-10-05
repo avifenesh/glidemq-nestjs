@@ -1,6 +1,6 @@
 {
   "name": "@glidemq/nestjs",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "NestJS module for glide-mq - decorators, dependency injection, and lifecycle management for queues and workers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -55,16 +55,17 @@
     "rxjs": ">=7.0.0"
   },
   "devDependencies": {
-    "@nestjs/common": "^10.4.0",
+    "@nestjs/common": "^11.1.18",
     "@nestjs/core": "^11.1.18",
-    "@nestjs/platform-express": "^10.4.22",
-    "@nestjs/testing": "^10.4.0",
+    "@nestjs/platform-express": "^11.1.18",
+    "@nestjs/testing": "^11.1.18",
     "@types/supertest": "^7.2.0",
-    "glide-mq": "latest",
+    "glide-mq": "^0.17.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.0",
     "supertest": "^7.2.2",
     "typescript": "^5.7.0",
+    "vite": "^8.3.2",
     "vitest": "^4.1.8"
   }
 }

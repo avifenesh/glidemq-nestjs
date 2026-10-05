@@ -1,6 +1,8 @@
 name: Publish to npm
 
 on:
+  pull_request:
+    branches: [main]
   push:
     tags:
       - 'v*'
@@ -29,13 +31,14 @@ jobs:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org'
 
-      - run: npm install
+      - run: npm ci
 
       - run: npm test
 
       - run: npm run build
 
       - name: Set version
+        if: github.event_name != 'pull_request'
         run: |
           if [ "${{ github.event_name }}" = "push" ]; then
             VERSION="${GITHUB_REF#refs/tags/v}"
