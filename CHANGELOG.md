@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.4
+
+- Validate against glide-mq 0.20.0 and cover bounded scheduler inventory through the real SDK, including limit rejection and existing inventory behavior.
+- Keep the supported glide-mq peer range and existing HTTP behavior unchanged.
+- Patch the development Express platform fixture with a scoped Multer 2.5 override, without changing NestJS peer requirements.
+
 ## 0.2.3
 
 - Validate against glide-mq 0.17.0 and replace the floating development dependency with an explicit compatible range.

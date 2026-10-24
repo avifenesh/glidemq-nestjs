@@ -205,4 +205,14 @@ describe('Queue operations', () => {
     const removed = await queue.getJobScheduler('daily-report');
     expect(removed).toBeNull();
   });
+  it('exposes GlideMQ 0.20 bounded scheduler inventories through testing-mode injection', async () => {
+    await setup();
+    await queue.upsertJobScheduler('one', { every: 60_000 });
+    await queue.upsertJobScheduler('two', { every: 120_000 });
+    expect(await queue.getRepeatableJobsBounded(2)).toHaveLength(2);
+    await expect(queue.getRepeatableJobsBounded(1)).rejects.toThrow();
+    await expect(queue.getRepeatableJobsBounded(0)).rejects.toThrow();
+    expect(await queue.getRepeatableJobs()).toHaveLength(2);
+  });
+
 });

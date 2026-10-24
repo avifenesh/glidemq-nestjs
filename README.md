@@ -19,6 +19,8 @@ npm install @glidemq/nestjs glide-mq @nestjs/common @nestjs/core
 
 Requires **glide-mq >= 0.15.2** and **NestJS 10+**.
 
+Compatibility is tested with **glide-mq 0.20.0**. The minimum supported peer range remains unchanged. Queues obtained through NestJS injection expose `getRepeatableJobsBounded(maxEntries)` when core 0.20.0+ is installed.
+
 ## Quick start
 
 ```typescript
