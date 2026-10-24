@@ -43,6 +43,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Check release workflow
+        run: node --test scripts/npm-release-checks.mjs
+
       - name: Audit all dependencies
         run: npm audit --include=dev --audit-level=low
 
@@ -66,12 +69,16 @@ jobs:
 
       - name: Publish
         if: github.event_name == 'push' || github.event.inputs.publish == 'true'
-        run: npm publish --access public --provenance
+        run: node scripts/npm-release.mjs publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Verify
         if: github.event_name == 'push' || github.event.inputs.publish == 'true'
-        run: |
-          sleep 10
-          npm view @glidemq/nestjs@${{ env.VERSION }} version
+        uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3
+        with:
+          timeout_seconds: 15
+          max_attempts: 30
+          retry_wait_seconds: 20
+          retry_on_exit_code: 75
+          command: node scripts/npm-release.mjs verify
